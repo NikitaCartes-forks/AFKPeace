@@ -1,12 +1,5 @@
 package amerebagatelle.github.io.afkpeace.mixin.client;
 
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import amerebagatelle.github.io.afkpeace.AFKManager;
 import amerebagatelle.github.io.afkpeace.AFKPeaceClient;
 import amerebagatelle.github.io.afkpeace.ConnectionManager;
@@ -20,6 +13,13 @@ import net.minecraft.client.realms.gui.screen.RealmsMainScreen;
 import net.minecraft.client.realms.gui.screen.RealmsScreen;
 import net.minecraft.network.packet.s2c.play.HealthUpdateS2CPacket;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPlayNetworkHandler.class)
 public abstract class ConnectMixin {
@@ -61,7 +61,7 @@ public abstract class ConnectMixin {
         if (AFKPeaceClient.CONFIG.damageLogoutEnabled || AFKManager.isAfk()) {
             try {
                 if (packet.getHealth() < lastHealth && packet.getHealth() < AFKPeaceClient.CONFIG.damageLogoutTolerance) {
-                    ConnectionManager.disconnectFromServer(Text.translatable("afkpeace.reason.damagelogout"));
+                    ConnectionManager.disconnectFromServer(new TranslatableText("afkpeace.reason.damagelogout"));
                 }
             } catch (NullPointerException ignored) {
             }

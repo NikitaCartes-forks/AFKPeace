@@ -1,17 +1,11 @@
 package amerebagatelle.github.io.afkpeace;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Properties;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import draylar.omegaconfig.OmegaConfig;
+import draylar.omegaconfiggui.OmegaConfigGui;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -22,12 +16,19 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.resource.language.I18n;
-import supsm.omicron_config.omicron_config;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Properties;
 
 @Environment(EnvType.CLIENT)
 public class AFKPeaceClient implements ClientModInitializer {
 	public static final Logger LOGGER = LogManager.getLogger("AFKPeace");
-	public static final AFKPeaceConfig CONFIG = omicron_config.register(AFKPeaceConfig.class);
+	public static final AFKPeaceConfig CONFIG = OmegaConfig.register(AFKPeaceConfig.class);
 	public static final String MODID = "afkpeace";
 
 	public static KeyBinding settingsKeybind;
@@ -41,11 +42,11 @@ public class AFKPeaceClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		if(Files.exists(FabricLoader.getInstance().getConfigDir().resolve("afkpeace.properties"))) recoverOldConfig();
 
-		//OmegaConfigGui.registerConfigScreen(CONFIG);
+		OmegaConfigGui.registerConfigScreen(CONFIG);
 
 		settingsKeybind = KeyBindingHelper.registerKeyBinding(new KeyBinding("afkpeace.keybind.settingsMenu", -1, "AFKPeace"));
 
-		/*ClientTickEvents.END_CLIENT_TICK.register((client) -> {
+		ClientTickEvents.END_CLIENT_TICK.register((client) -> {
 			if(settingsKeybind.wasPressed()) {
 				client.setScreen(OmegaConfigGui.getConfigScreenFactory(CONFIG).get(client.currentScreen));
 			}
@@ -53,7 +54,7 @@ public class AFKPeaceClient implements ClientModInitializer {
 			if (AFKPeaceClient.CONFIG.autoAfk) {
 				AFKManager.tickAfkStatus();
 			}
-		});*/
+		});
 
 		HudRenderCallback.EVENT.register((matrices, tickDelta) -> {
 			if((CONFIG.reconnectEnabled || CONFIG.damageLogoutEnabled || AFKManager.isAfk()) && CONFIG.featuresEnabledIndicator) {

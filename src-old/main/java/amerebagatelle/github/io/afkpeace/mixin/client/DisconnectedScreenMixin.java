@@ -1,13 +1,5 @@
 package amerebagatelle.github.io.afkpeace.mixin.client;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import amerebagatelle.github.io.afkpeace.AFKPeaceClient;
 import amerebagatelle.github.io.afkpeace.ConnectionManager;
 import net.minecraft.client.gui.screen.DisconnectedScreen;
@@ -16,7 +8,14 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.NarratorManager;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Mixin(DisconnectedScreen.class)
 public abstract class DisconnectedScreenMixin extends Screen {
@@ -33,7 +32,7 @@ public abstract class DisconnectedScreenMixin extends Screen {
     public void onInit(CallbackInfo ci) {
         timeOfDisconnect = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         if (!AFKPeaceClient.CONFIG.reconnectEnabled && AFKPeaceClient.currentServerEntry != null) {
-            this.addDrawableChild(new ButtonWidget(width / 2 - 100, this.height - 30, 200, 20, Text.translatable("afkpeace.reconnect"), (buttonWidget) -> ConnectionManager.connectToServer(AFKPeaceClient.currentServerEntry)));
+            this.addDrawableChild(new ButtonWidget(width / 2 - 100, this.height - 30, 200, 20, new TranslatableText("afkpeace.reconnect"), (buttonWidget) -> ConnectionManager.connectToServer(AFKPeaceClient.currentServerEntry)));
         }
     }
 

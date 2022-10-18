@@ -1,11 +1,10 @@
 package amerebagatelle.github.io.afkpeace;
 
+import draylar.omegaconfig.api.Comment;
+import draylar.omegaconfig.api.Config;
 import org.jetbrains.annotations.Nullable;
 
-import supsm.omicron_config.Comment;
-import supsm.omicron_config.basic_config;
-
-public class AFKPeaceConfig implements basic_config {
+public class AFKPeaceConfig implements Config {
     // Setting toggles
     @Comment("Turn all features on when AFK for longer than autoAfkTimer seconds.")
     public boolean autoAfk = false;

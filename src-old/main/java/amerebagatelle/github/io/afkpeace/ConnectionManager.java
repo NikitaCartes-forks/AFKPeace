@@ -1,7 +1,5 @@
 package amerebagatelle.github.io.afkpeace;
 
-import java.util.Objects;
-
 import amerebagatelle.github.io.afkpeace.util.ReconnectThread;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -12,7 +10,11 @@ import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.network.ServerAddress;
 import net.minecraft.client.network.ServerInfo;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+
+import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
 public class ConnectionManager {
@@ -25,11 +27,11 @@ public class ConnectionManager {
      * @param target The server to connect to.
      */
     public static void startReconnect(ServerInfo target) {
-        Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).getConnection().disconnect(Text.translatable("reconnecting"));
+        Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).getConnection().disconnect(new TranslatableText("reconnecting"));
         MinecraftClient.getInstance().disconnect();
         reconnectThread = new ReconnectThread(target);
         reconnectThread.start();
-        MinecraftClient.getInstance().setScreen(new DisconnectedScreen(new MultiplayerScreen(new TitleScreen()), Text.literal("AFKPeaceReconnection"), Text.translatable("afkpeace.reconnect.reason")));
+        MinecraftClient.getInstance().setScreen(new DisconnectedScreen(new MultiplayerScreen(new TitleScreen()), new LiteralText("AFKPeaceReconnection"), new TranslatableText("afkpeace.reconnect.reason")));
     }
 
     /**
@@ -48,7 +50,7 @@ public class ConnectionManager {
         } catch (InterruptedException ignored) {
         }
         AFKPeaceClient.LOGGER.debug("Reconnecting cancelled.");
-        MinecraftClient.getInstance().setScreen(new DisconnectedScreen(new MultiplayerScreen(new TitleScreen()), Text.literal("AFKPeaceDisconnect"), Text.translatable("afkpeace.reconnectfail")));
+        MinecraftClient.getInstance().setScreen(new DisconnectedScreen(new MultiplayerScreen(new TitleScreen()), new LiteralText("AFKPeaceDisconnect"), new TranslatableText("afkpeace.reconnectfail")));
     }
 
     /**
@@ -70,7 +72,7 @@ public class ConnectionManager {
             isDisconnecting = true;
             Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).getConnection().disconnect(reason);
             MinecraftClient.getInstance().disconnect();
-        MinecraftClient.getInstance().setScreen(new DisconnectedScreen(new MultiplayerScreen(new TitleScreen()), Text.literal("AFKPeaceDisconnect"), reason));
+        MinecraftClient.getInstance().setScreen(new DisconnectedScreen(new MultiplayerScreen(new TitleScreen()), new LiteralText("AFKPeaceDisconnect"), reason));
         } else {
             if (AFKPeaceClient.currentServerEntry != null) startReconnect(AFKPeaceClient.currentServerEntry);
         }
